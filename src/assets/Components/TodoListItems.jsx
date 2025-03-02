@@ -3,90 +3,81 @@ import DeleteIcon from "./Icons/DeleteIcon";
 import EditIcon from "./Icons/EditIcon";
 import React, {useContext, useEffect, useState} from 'react';
 import { toast } from 'react-toastify';
-
+import { useSelector , useDispatch } from "react-redux";
+import {editTodoRedux, deleteTodoRedux , toggleTodoRedux} from './../../store/slices/todosSlice'
 
 export default function TodoListItems({todo}) {
 
-   const [ editMode , setEditMode] = useState(false);
-   const  [inputValue , setInputValue] = useState(todo?.title);
+    // const showitems = useSelector(state => state.todoRedux.value)
+    // console.log(addTodoRedux)
 
-   const {todoDispatcher} = useContext(TodoContext);
+
+
+   const [ editMode , setEditMode] = useState(false);
+   //const  [inputValue , setInputValue] = useState(todo?.title);
+   const dispatch = useDispatch();
 
    const deleteTodoHandler = async (deleteTodos ) => { // فیلتر برای این هست که بر اساس شرطی که چک می کنیم یک یا چند تا از آیتم ها رو حذف کنه
-    let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${deleteTodos.id}`, {
-        method: 'DELETE',
-    })
-    if(res.ok){
-
-        todoDispatcher({
-            type: 'delete' ,
-            id : deleteTodos.id
+        let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${deleteTodos.id}`, {
+            method: 'DELETE',
         })
-        toast.error('the todo deleted')
-    }
-    let msg = await res.json();
-    toast.error(msg)
+        if(res.ok){
+            dispatch(deleteTodoRedux(deleteTodos.id))
+            toast.error('the todo deleted')
+        }
+        let msg = await res.json();
+        toast.error(msg)
 }
 
 
 const toggleTodoStatsHandler = async (changeStatus) =>{ // مپ برای این هست که بر اساس شرطی که داریم یک یا چند تا از آیتم ها رو تغییر بده
 
-let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${changeStatus.id}` , {
-    method: 'put' ,
-    headers : {'content-type':'application/json'},
-    body : JSON.stringify(
-          {
-            status : ! changeStatus.status
+        let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${changeStatus.id}` , {
+            method: 'put' ,
+            headers : {'content-type':'application/json'},
+            body : JSON.stringify(
+                {
+                    status : ! changeStatus.status
+                }
+            ),
+        })
+        if(res.ok){
+            dispatch(toggleTodoRedux(changeStatus))
         }
-    ),
-})
-if(res.ok){
-    todoDispatcher({
-        type: 'toggle-status' ,
-        id : changeStatus.id
-    })
+        // show the error
 }
-// show the error
-}
-
 
 const setEditeItemHandler = async (editItem)=>{
 
-let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${editItem.id}` , {
-    method: 'put' ,
-    headers : {'content-type':'application/json'},
-    body : JSON.stringify(
-          {
-            title :  editItem.title
+        let res = await fetch(`https://67b44dcb392f4aa94faa41ee.mockapi.io/api/v1/todos/${editItem.id}` , {
+            method: 'put' ,
+            headers : {'content-type':'application/json'},
+            body : JSON.stringify(
+                {
+                    title :  editItem.title
+                }
+            ),
+        })
+        if(res.ok){
+            dispatch(editTodoRedux(editItem))
         }
-    ),
-})
-if(res.ok){
-    todoDispatcher({
-        type : 'update-todos' ,
-        id : editItem.id ,
-        title: editItem.title
-    })
-}
 }
 
-
-
-   const setNewInputValueHandler = ()=>{
-    setInputValue(event.target.value)
-   }
+//    const setNewInputValueHandler = ()=>{
+//         setInputValue(event.target.value)
+//    }
 
    const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && event.target.value != '') {
+        if (event.key === 'Enter' && event.target.value != '') {
 
-        let newTodo = {
-            id : todo.id,
-            title : event.target.value,
-            status :todo.status
+            let newTodo = {
+                id : todo.id,
+                title : event.target.value,
+                status :todo.status
+            }
+            setEditeItemHandler(newTodo)
+            setEditMode(false)
         }
-        setEditeItemHandler(newTodo)
-        setEditMode(false)
-    }
   };
 //   useEffect(() =>{
 //     console.log(`component created ${todo.title}`)
@@ -99,7 +90,7 @@ if(res.ok){
             editMode
             ?
             <div className="w-full flex items-center">
-                <input type="text" value={inputValue} onChange={() =>setNewInputValueHandler()} onKeyDown={handleKeyDown}
+                <input type="text" defaultValue={todo?.title} onChange={() => {}} onKeyDown={handleKeyDown}
                 className="w-full px-4 py-2 border border-gray-200 rounded" />
                 <DeleteIcon className="ml-2" onClick={() =>setEditMode(false)} />
             </div>
