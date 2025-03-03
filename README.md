@@ -1,4 +1,7 @@
 # React + Vite
+![React](https://img.shields.io/badge/React-18.0-blue)
+![CSS](https://img.shields.io/badge/CSS-Style-blue)
+![API](https://img.shields.io/badge/Fetch-API-orange)
 
 # Todo App
 
