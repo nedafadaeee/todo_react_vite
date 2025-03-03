@@ -1,8 +1,30 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Todo App
 
-Currently, two official plugins are available:
+Todo App پروژه‌ای برای مدیریت کارهای روزانه با استفاده از React.js
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ویژگی‌ها
+- اضافه کردن تسک جدید
+- حذف تسک
+- ویرایش تسک
+- ذخیره‌سازی در Local Storage
+
+## نصب و اجرا
+```bash
+git clone https://github.com/nedafadaeee/TodoApp.git
+cd TodoApp
+npm install
+npm start
+
+## API
+این پروژه از **mockapi.io** برای دریافت و ارسال داده‌ها استفاده می‌کند.
+
+### Endpoint‌ها
+- `GET /tasks` -> دریافت لیست تسک‌ها
+- `POST /tasks` -> اضافه کردن تسک جدید
+- `PUT /tasks/:id` -> ویرایش تسک
+- `DELETE /tasks/:id` -> حذف تسک
+
+### نحوه ارتباط
+برای ارسال درخواست‌ها از متد **fetch** در جاوااسکریپت استفاده شده است.
